@@ -8,6 +8,7 @@ struct ContentView: View {
     @State private var orderId: String?
     @State private var orderTotal: Double = 0
     @State private var showUpdatesPrompt = true
+    @FocusState private var promoFocused: Bool
 
     private let ink = Color(red: 0.078, green: 0.067, blue: 0.059)
     private let paper = Color(red: 0.969, green: 0.953, blue: 0.925)
@@ -27,6 +28,7 @@ struct ContentView: View {
                 }
                 .padding(20)
             }
+            .scrollDismissesKeyboard(.immediately)
         }
         .preferredColorScheme(.light)
     }
@@ -136,6 +138,9 @@ struct ContentView: View {
                     .overlay(RoundedRectangle(cornerRadius: 10).stroke(line))
                     .accessibilityIdentifier("promo-field")
                     .accessibilityLabel("Promo code")
+                    .focused($promoFocused)
+                    .submitLabel(.done)
+                    .onSubmit { applyPromo() }
                 Button("Apply") { applyPromo() }
                     .font(.subheadline.weight(.semibold))
                     .padding(.horizontal, 16).padding(.vertical, 10)
@@ -181,10 +186,11 @@ struct ContentView: View {
             Text(label).foregroundStyle(bold ? ink : .secondary)
             Spacer()
             Text(value).monospacedDigit()
+                .accessibilityIdentifier((id ?? label.lowercased()) + "-value")
         }
         .font(bold ? .headline : .subheadline)
         .accessibilityIdentifier(id ?? label.lowercased())
-        .accessibilityElement(children: .combine)
+        .accessibilityValue(value)
     }
 
     private func confirmation(_ id: String) -> some View {
@@ -201,6 +207,7 @@ struct ContentView: View {
     }
 
     private func applyPromo() {
+        promoFocused = false
         let code = promoField.trimmingCharacters(in: .whitespaces).uppercased()
         if code == Promo.code {
             cart.promoApplied = true

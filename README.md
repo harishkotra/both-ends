@@ -2,6 +2,8 @@
 
 **One plain-English journey. Two surfaces. One proof — and, when they disagree, the exact step where the story splits.**
 
+![the same journey on both ends](docs/img/both-ends.png)
+
 A web suite can't see the phone. A mobile suite can't see the browser. So the bug that ships is the one where the total is `$18.75` on the web and `$24.94` in the app, and both suites are green.
 
 `both-ends` runs one journey against a browser **and** an iOS app, aligns the two runs by *what the agent was trying to do* (not by step index), and reports where they diverge. Then it seals both runs into one evidence pack and hands the diverging steps to a coding agent as a repair brief — so the loop closes with a rerun, not a comment.
@@ -132,8 +134,9 @@ Divergence classes: `agreed-pass`, `agreed-fail`, `split`, `unproven`, `error`. 
 | A surface that never ran is never a pass | test *"a surface that never ran is an error, not a pass"* |
 | Merge delegates to kane-cli and hashes output | test with a stub `kane-cli` (`BOTH_ENDS_KANE`) |
 | The loop converges only on a real second run | test *"the loop closes only when the second run agrees"* |
-| Web console totals are right | `POST /api/orders` → `{"subtotal":25,"discount":6.25,"total":18.75}` |
-| iOS app builds and renders | `xcodebuild … BUILD SUCCEEDED`, screenshot in `docs/img/` |
+| The browser really shows 18.75 | `scripts/shoot-web.mjs` drives real Chrome over CDP and reads the DOM: `$25.00 / −$6.25 / $18.75` |
+| The phone really shows 24.94 | `scripts/shoot-phone.mjs` drives the built app through Appium/XCUITest and reads the labels: `$25.00 / −$0.06 / $24.94` |
+| Both numbers come from the same journey file | same six anchors, same promo, same item — only the rate handling differs |
 
 **Not yet verified, and not claimed:** a live `kane-cli` run needs (a) a TestMu AI login — the account is the entrant's, so `both-ends` never asks for credentials — and (b) on `darwin-arm64`, Kane 0.10.6 publishes no managed simulator dependency bundle, so the phone surface needs a self-managed Appium endpoint (`--appium-url`). Both are environment gates, not code paths; the fixture runs above exercise the same pipeline end to end.
 

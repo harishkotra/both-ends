@@ -91,12 +91,11 @@ export async function runLoop(opts) {
     last = result;
 
     log(renderTerminal(result));
-    log(dim(`brief → ${join(result.artifacts.dir, 'brief.md')}`));
-
     if (converged) {
       log(green(`converged after ${loop} loop${loop === 1 ? '' : 's'}`));
       return { ...result, loopHistory: history, loops: loop, converged: true };
     }
+    log(dim(`brief → ${join(result.artifacts.dir, 'brief.md')}`));
     if (loop === maxLoops) break;
 
     if (fixCommand) {

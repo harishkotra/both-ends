@@ -1,5 +1,5 @@
 {"type":"start","run_id":"fx-sim","target":"simulator","app":"BothEndsDemo.app"}
-{"type":"step","text":"Launched Both Ends Demo on iPhone 17 Pro and allowed notifications","status":"pass"}
+{"type":"step","text":"Launched Both Ends Demo on iPhone 18 Pro and allowed notifications","status":"pass"}
 {"type":"step","text":"Tapped Add to cart on the Signature Bowl","status":"pass"}
 {"type":"step","text":"Opened the cart: the cart badge shows 1 item","status":"pass"}
 {"type":"step","text":"Typed HACK25 into the promo field and tapped Apply: the promo code HACK25 is shown as applied","status":"pass"}

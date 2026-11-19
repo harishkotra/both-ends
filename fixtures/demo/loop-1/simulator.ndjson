@@ -1,10 +1,10 @@
 {"type":"start","run_id":"fx-sim","target":"simulator","app":"BothEndsDemo.app"}
-{"type":"step","text":"Launched Both Ends Demo on iPhone 17 Pro and allowed notifications","status":"pass"}
+{"type":"step","text":"Launched Both Ends Demo on iPhone 18 Pro and allowed notifications","status":"pass"}
 {"type":"step","text":"Tapped Add to cart on the Signature Bowl","status":"pass"}
 {"type":"step","text":"Opened the cart: the cart badge shows 1 item","status":"pass"}
 {"type":"step","text":"Typed HACK25 into the promo field and tapped Apply: the promo code HACK25 is shown as applied","status":"pass"}
 {"type":"observation","text":"Read the totals: the subtotal shows 25.00","status":"pass"}
-{"type":"observation","text":"Read the totals: no discount line is shown in the cart","status":"fail","detail":"expected a discount line of 6.25"}
-{"type":"observation","text":"Read the totals: the order total shows 25.00","status":"fail","detail":"expected 18.75"}
+{"type":"observation","text":"Read the totals: the cart shows a discount of 0.06","status":"fail","detail":"expected a discount of 6.25"}
+{"type":"observation","text":"Read the totals: the order total shows 24.94","status":"fail","detail":"expected 18.75"}
 {"type":"step","text":"Tapped Place order: the confirmation shows an order number starting with BE-","status":"pass"}
 {"type":"run_end","status":"failed","run_id":"fx-sim","final_validation":"fail"}
