@@ -1,0 +1,8 @@
+node_modules/
+.both-ends/
+demo/build/
+demo/ios/BothEndsDemo.xcodeproj/
+demo/ios/*.xcworkspace/
+.DS_Store
+*.log
+/tmp/

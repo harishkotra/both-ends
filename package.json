@@ -1,0 +1,33 @@
+{
+  "name": "both-ends",
+  "version": "0.1.0",
+  "description": "One plain-English journey, proven on the phone and on the web — with one sealed evidence pack and a cross-surface divergence report.",
+  "type": "module",
+  "bin": {
+    "both-ends": "bin/both-ends.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "demo": "node demo/server/index.js",
+    "run:demo": "node bin/both-ends.js run journeys/place-order-two-ends.journey.md --json",
+    "loop:demo": "node bin/both-ends.js loop journeys/place-order-two-ends.journey.md --max-loops 2"
+  },
+  "files": [
+    "bin",
+    "src",
+    "policies",
+    "journeys"
+  ],
+  "keywords": [
+    "kane",
+    "kane-cli",
+    "cross-surface",
+    "ios-simulator",
+    "evidence",
+    "assurance"
+  ],
+  "license": "MIT"
+}

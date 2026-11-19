@@ -1,0 +1,29 @@
+# The verdict both-ends asks for when two surfaces are merged into one pack.
+# Any gate that fires means: this journey is not proven on both ends yet.
+policy: both-ends
+gates:
+  - id: both-surfaces-ran
+    metric: run.status
+    equals: finalized
+    severity: blocking
+    message: a merged pack is only meaningful once both surfaces have finalized
+  - id: nothing-failed
+    metric: totals.failed
+    max: 0
+    severity: blocking
+    message: a journey step failed on at least one surface
+  - id: no-broken-oracles
+    metric: totals.broken
+    max: 0
+    severity: blocking
+    message: an assertion could not be evaluated, so the step is unproven
+  - id: nothing-skipped
+    metric: totals.skipped
+    max: 0
+    severity: blocking
+    message: a skipped step is not proof
+  - id: every-test-replayable
+    metric: metrics.non_replay_tests
+    max: 0
+    severity: warning
+    message: a test that cannot be replayed cannot be trusted as evidence

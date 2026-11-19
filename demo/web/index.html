@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Saffron &amp; Rye — order console</title>
+<link rel="stylesheet" href="/app.css" />
+</head>
+<body>
+<div class="cookie" id="cookie" role="region" aria-label="Cookie banner">
+  <p>We use cookies to keep your cart between visits.</p>
+  <button id="accept-cookies" type="button">Accept all</button>
+</div>
+
+<header class="masthead">
+  <div class="brand">
+    <span class="mark" aria-hidden="true">S&amp;R</span>
+    <div>
+      <h1>Saffron &amp; Rye</h1>
+      <p class="tag">Lunch, resolved.</p>
+    </div>
+  </div>
+  <button class="cart-pill" id="open-cart" type="button" aria-label="Open cart">
+    Cart <span class="count" id="cart-count" aria-live="polite">0</span>
+  </button>
+</header>
+
+<main>
+  <section class="menu" aria-label="Menu">
+    <article class="dish" data-id="bowl">
+      <div class="dish-art" aria-hidden="true"><span></span></div>
+      <div class="dish-body">
+        <h2>Signature Bowl</h2>
+        <p class="note">miso greens, crisp rice, soft egg</p>
+        <div class="dish-row">
+          <span class="price" id="price-bowl">$25.00</span>
+          <button class="add" data-add="bowl" type="button">Add to cart</button>
+        </div>
+      </div>
+    </article>
+    <article class="dish" data-id="tea">
+      <div class="dish-art alt" aria-hidden="true"><span></span></div>
+      <div class="dish-body">
+        <h2>Yuzu Iced Tea</h2>
+        <p class="note">no added sugar</p>
+        <div class="dish-row">
+          <span class="price" id="price-tea">$5.00</span>
+          <button class="add" data-add="tea" type="button">Add to cart</button>
+        </div>
+      </div>
+    </article>
+  </section>
+
+  <section class="cart" id="cart" aria-label="Cart" hidden>
+    <div class="cart-head">
+      <h2>Your cart</h2>
+      <button class="ghost" id="close-cart" type="button">Keep browsing</button>
+    </div>
+
+    <ul class="lines" id="lines" aria-live="polite"></ul>
+
+    <form class="promo" id="promo-form" autocomplete="off">
+      <label for="promo">Promo code</label>
+      <div class="promo-row">
+        <input id="promo" name="promo" type="text" placeholder="HACK25" spellcheck="false" />
+        <button id="apply" type="submit">Apply</button>
+      </div>
+      <p class="promo-note" id="promo-note" aria-live="polite"></p>
+    </form>
+
+    <dl class="totals">
+      <div><dt>Subtotal</dt><dd id="subtotal">$0.00</dd></div>
+      <div id="discount-row" hidden><dt>Discount</dt><dd id="discount">−$0.00</dd></div>
+      <div class="grand"><dt>Total</dt><dd id="total">$0.00</dd></div>
+    </dl>
+
+    <button class="place" id="place-order" type="button" disabled>Place order</button>
+  </section>
+
+  <section class="confirm" id="confirm" aria-live="polite" hidden>
+    <p class="kicker">Confirmed</p>
+    <h2 id="order-id">BE-0000</h2>
+    <p id="order-total">Total $0.00</p>
+    <button class="ghost" id="start-over" type="button">Start a new order</button>
+  </section>
+</main>
+
+<script src="/app.js"></script>
+</body>
+</html>

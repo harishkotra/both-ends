@@ -1,0 +1,10 @@
+{"type":"start","run_id":"fx-web","target":"desktop","url":"http://127.0.0.1:4173"}
+{"type":"step","text":"Opened http://127.0.0.1:4173 in Chrome and dismissed the cookie banner","status":"pass"}
+{"type":"step","text":"Clicked Add to cart on the Signature Bowl","status":"pass"}
+{"type":"step","text":"Opened the cart: the cart badge shows 1 item","status":"pass"}
+{"type":"step","text":"Typed HACK25 into the promo field and clicked Apply: the promo code HACK25 is shown as applied","status":"pass"}
+{"type":"observation","text":"Read the totals: the subtotal shows 25.00","status":"pass"}
+{"type":"observation","text":"Read the totals: the cart shows a discount of 6.25","status":"pass"}
+{"type":"observation","text":"Read the totals: the order total shows 18.75","status":"pass"}
+{"type":"step","text":"Clicked Place order: the confirmation shows an order number starting with BE-","status":"pass"}
+{"type":"run_end","status":"passed","run_id":"fx-web","final_validation":"pass"}
