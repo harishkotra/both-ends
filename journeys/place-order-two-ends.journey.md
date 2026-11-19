@@ -5,6 +5,7 @@ surfaces: desktop, simulator
 url: http://127.0.0.1:4173
 app: demo/build/Build/Products/Debug-iphonesimulator/BothEndsDemo.app
 device: iPhone 18 Pro
+appium: http://127.0.0.1:4723
 timeout: 240
 maxSteps: 45
 policy: policies/both-ends.yaml

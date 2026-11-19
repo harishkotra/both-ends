@@ -177,7 +177,7 @@ export function buildArgs({ surface, journey, name, workdir }) {
 /**
  * Execute one surface. Returns metadata plus the raw NDJSON for replay.
  */
-export async function runSurface({ surface, journey, workdir = process.cwd(), onLine, fakeDir = null }) {
+export async function runSurface({ surface, journey, workdir = process.cwd(), onLine, fakeDir = null, appiumUrl = null }) {
   const name = `both-ends-${journey.id}-${surface}-${Date.now().toString(36)}`;
   const startedAt = Date.now();
 
@@ -202,7 +202,11 @@ export async function runSurface({ surface, journey, workdir = process.cwd(), on
   const result = await new Promise((res) => {
     let child;
     try {
-      child = spawn(KANE_BIN(), args, { cwd, stdio: ['ignore', 'pipe', 'pipe'] });
+      child = spawn(KANE_BIN(), args, {
+        cwd,
+        stdio: ['ignore', 'pipe', 'pipe'],
+        env: appiumUrl ? { ...process.env, KANE_APPIUM_URL: appiumUrl } : process.env,
+      });
     } catch (err) {
       return res({ exitCode: 127, ok: false, error: String(err.message || err) });
     }

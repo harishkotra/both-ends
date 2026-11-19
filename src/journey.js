@@ -191,6 +191,7 @@ export function loadJourney(file) {
     url: meta.url || '',
     app: meta.app || '',
     device: meta.device || '',
+    appium: meta.appium || '',
     osVersion: String(meta.osVersion ?? meta['os-version'] ?? ''),
     timeout: Number(meta.timeout || 240),
     maxSteps: Number(meta.maxSteps || 45),

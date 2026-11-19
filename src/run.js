@@ -44,6 +44,7 @@ export async function runBothEnds(opts) {
       journey,
       workdir,
       fakeDir: surfaceFake ? surfaceFake.dir : null,
+      appiumUrl: journey.appium || null,
       onLine: verbose ? (l) => log(dim(`  ${surface}: ${l}`)) : undefined,
     });
     runs[surface] = run;

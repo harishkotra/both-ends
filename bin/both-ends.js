@@ -175,6 +175,11 @@ async function cmdDoctor() {
   const loggedIn = !/Not logged in/i.test(login.out);
   lines.push(`${loggedIn ? green('ok ') : yellow('!! ')} kane-cli login ${loggedIn ? 'active' : 'not logged in — run: kane-cli login'}`);
 
+  const appiumUrl = process.env.KANE_APPIUM_URL || 'http://127.0.0.1:4723';
+  const appium = await probe(['curl', '-sf', '-m', '2', `${appiumUrl}/status`]);
+  const appiumUp = appium.code === 0 && /ready|sessionId|build/i.test(appium.out);
+  lines.push(`${appiumUp ? green('ok ') : yellow('!! ')} appium ${appiumUp ? `reachable at ${appiumUrl}` : `not at ${appiumUrl} — needed for the phone surface on darwin-arm64 (no managed bundle in kane-cli): appium &`}`);
+
   process.stdout.write('\n' + lines.join('\n') + '\n\n');
   return loggedIn ? 0 : 1;
 }
@@ -219,7 +224,7 @@ title: ${name.replace(/-/g, ' ')}
 surfaces: desktop, simulator
 url: http://127.0.0.1:4173
 app: build/MyApp.app
-device: iPhone 17 Pro
+device: iPhone 18 Pro
 timeout: 240
 maxSteps: 45
 ---
