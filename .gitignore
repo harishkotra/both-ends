@@ -6,3 +6,4 @@ demo/ios/*.xcworkspace/
 .DS_Store
 *.log
 /tmp/
+docs/video/frames/

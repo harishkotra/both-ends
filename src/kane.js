@@ -8,7 +8,35 @@ import { existsSync, readdirSync, statSync, readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
 import { nowIso, shortId, truncate, ensureDir, writeText } from './util.js';
 
-export const KANE_BIN = () => process.env.BOTH_ENDS_KANE || 'kane-cli';
+// kane-cli installs wherever npm's global bin is, which under nvm is not on PATH
+// in every shell. Look in the usual places before giving up on it.
+function findKane() {
+  if (process.env.BOTH_ENDS_KANE) return process.env.BOTH_ENDS_KANE;
+  const home = process.env.HOME || '';
+  const candidates = [
+    'kane-cli',
+    `${home}/.npm-global/bin/kane-cli`,
+    '/opt/homebrew/bin/kane-cli',
+    '/usr/local/bin/kane-cli',
+  ];
+  try {
+    const nvm = `${home}/.nvm/versions/node`;
+    for (const v of readdirSync(nvm).sort().reverse()) candidates.push(`${nvm}/${v}/bin/kane-cli`);
+  } catch {
+    /* no nvm */
+  }
+  for (const c of candidates) {
+    if (c === 'kane-cli') continue;
+    try {
+      if (statSync(c).isFile()) return c;
+    } catch {
+      /* keep looking */
+    }
+  }
+  return 'kane-cli';
+}
+
+export const KANE_BIN = () => findKane();
 
 const ANSI = /\u001b\[[0-9;]*[A-Za-z]/g;
 

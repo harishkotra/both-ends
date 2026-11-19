@@ -9,6 +9,7 @@ import { existsSync, statSync, copyFileSync, readdirSync } from 'node:fs';
 import { join, basename, resolve } from 'node:path';
 import { KANE_BIN, stripAnsi } from './kane.js';
 import { sha256File, ensureDir, writeText, nowIso } from './util.js';
+import { renderHtml } from './html.js';
 
 function runKane(args, cwd) {
   return new Promise((res) => {
@@ -84,14 +85,27 @@ export function truncateMiddle(s, max) {
  * Write the human-facing sidecar next to a pack: divergence.json, report.md,
  * replay/*.ndjson, and a SEAL with hashes of everything that went in.
  */
-export function writeArtifacts(dir, { divergence, report, runs, merged, policyPath }) {
+export function writeArtifacts(dir, { divergence, report, runs, merged, policyPath, journeyTitle }) {
   ensureDir(dir);
   const divergencePath = join(dir, 'divergence.json');
   const reportPath = join(dir, 'report.md');
+  const htmlPath = join(dir, 'report.html');
   const replayDir = ensureDir(join(dir, 'replay'));
 
   writeText(divergencePath, JSON.stringify({ generatedAt: nowIso(), ...divergence }, null, 2));
   writeText(reportPath, report);
+  writeText(
+    htmlPath,
+    renderHtml({
+      journey: { id: divergence.journey, title: journeyTitle || divergence.journey },
+      rows: divergence.rows || [],
+      summary: divergence.summary || {},
+      runs,
+      pack: merged?.path ? { path: merged.path, sha256: merged.sha256 } : null,
+      artifacts: { dir },
+      loopHistory: divergence.loopHistory || [],
+    }),
+  );
 
   const replays = [];
   for (const run of Object.values(runs)) {
@@ -118,13 +132,13 @@ export function writeArtifacts(dir, { divergence, report, runs, merged, policyPa
       ? { path: merged.path, sha256: merged.sha256, report: merged.report ?? null }
       : null,
     policy: policyPath && existsSync(policyPath) ? { path: policyPath, sha256: sha256File(policyPath) } : null,
-    artifacts: [divergencePath, reportPath, ...replays].map((p) => ({ path: p, sha256: sha256File(p) })),
+    artifacts: [divergencePath, reportPath, htmlPath, ...replays].map((p) => ({ path: p, sha256: sha256File(p) })),
     converged: divergence.converged,
   };
 
   const sealPath = join(dir, 'SEAL.json');
   writeText(sealPath, JSON.stringify(manifest, null, 2));
-  return { dir, divergencePath, reportPath, sealPath, manifest };
+  return { dir, divergencePath, reportPath, htmlPath, sealPath, manifest };
 }
 
 /** Copy an existing pack into the run directory so a demo bundle travels whole. */

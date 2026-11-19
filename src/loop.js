@@ -78,13 +78,16 @@ export async function runLoop(opts) {
     writeText(join(result.artifacts.dir, 'brief.json'), JSON.stringify(brief.json, null, 2));
 
     const reportMd = renderMarkdown({ ...result, loopHistory: history });
-    writeArtifacts(result.artifacts.dir, {
-      divergence: { ...result.divergence, journey: result.journey.id, runId: result.runId },
+    const written = writeArtifacts(result.artifacts.dir, {
+      divergence: { ...result.divergence, journey: result.journey.id, runId: result.runId, loopHistory: history },
       report: reportMd,
       runs: result.runs,
       merged: result.merged,
       policyPath: result.journey.policy || null,
+      journeyTitle: result.journey.title,
     });
+    result.artifacts.htmlPath = written.htmlPath;
+    result.artifacts.sealPath = written.sealPath;
 
     result.brief = brief;
     result.divergence.loopHistory = history;

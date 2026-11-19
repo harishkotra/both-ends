@@ -1,0 +1,41 @@
+name: verify
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: install kane-cli
+        run: npm install -g @testmuai/kane-cli
+      - name: unit tests
+        run: npm test
+      - name: journey lints
+        run: node bin/both-ends.js lint journeys/place-order-two-ends.journey.md
+      - name: policy lints
+        run: node bin/both-ends.js lint policies/both-ends.yaml
+      - name: replay the demo loop (no account, no simulator)
+        run: |
+          node bin/both-ends.js loop journeys/place-order-two-ends.journey.md \
+            --fake fixtures/demo/loop-1 --fake fixtures/demo/loop-2
+      - name: the sealed pack survives a second read
+        run: |
+          for d in .both-ends/*/; do
+            node -e "
+              const fs=require('fs'),c=require('crypto'),p=process.argv[1];
+              const m=JSON.parse(fs.readFileSync(p+'/SEAL.json'));
+              for (const a of m.artifacts) {
+                const h=c.createHash('sha256').update(fs.readFileSync(a.path)).digest('hex');
+                if (h!==a.sha256) { console.error('hash mismatch',a.path); process.exit(1); }
+              }
+              console.log('sealed ok', p);
+            " "$d"
+          done

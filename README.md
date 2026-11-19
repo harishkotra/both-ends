@@ -158,7 +158,10 @@ fixtures/         recorded NDJSON so tests and demos are deterministic
 ```
 
 `./scripts/stage.sh` brings the console, the simulator app and Appium up and tells
-you what's missing. `docs/demo-script.md` is the 3:40 shot list, `docs/posts.md`
-the two launch posts, `docs/SUBMISSION.md` the gate checklist.
+you what's missing. Every run leaves `report.html` beside the sealed pack — one
+self-contained page a reviewer can open with no install. `both-ends lint
+<journey.md>` checks a journey before it costs a run. `docs/demo-script.md` is the 3:40 shot list, `docs/posts.md`
+the two launch posts, `docs/SUBMISSION.md` the gate checklist, and
+`docs/video/both-ends-demo.mp4` the 3:18 cut of the demo.
 
 Built for the TestMu AI × Kane CLI hackathon, November 2026.

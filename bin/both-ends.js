@@ -8,6 +8,7 @@ import { runLoop } from '../src/loop.js';
 import { renderTerminal, renderMarkdown } from '../src/report.js';
 import { loadJourney } from '../src/journey.js';
 import { lintPolicy, writeArtifacts } from '../src/evidence.js';
+import { lintJourney, renderJourneyLint } from '../src/journey-lint.js';
 import { buildBrief } from '../src/brief.js';
 import { kaneVersion, KANE_BIN } from '../src/kane.js';
 import { writeText, ensureDir, shortId, green, red, yellow, dim, bold } from '../src/util.js';
@@ -18,6 +19,7 @@ both-ends — prove one journey on both surfaces, or find out where they disagre
   both-ends run  <journey.md>     run every surface, align, diff, seal a pack
   both-ends loop <journey.md>     run → brief → agent fixes → rerun, until converged
   both-ends doctor               check this machine (kane-cli, Xcode, simulator)
+  both-ends lint <journey.md>    check a journey before it costs a run
   both-ends lint <policy.yaml>   validate an evidence verdict policy
   both-ends serve <pack>         open a sealed pack in kane-cli's viewer
 
@@ -82,7 +84,8 @@ async function cmdRun(args) {
   writeText(join(result.artifacts.dir, 'brief.json'), JSON.stringify(brief.json, null, 2));
 
   const md = renderMarkdown(result);
-  writeArtifacts(result.artifacts.dir, {
+  const written = writeArtifacts(result.artifacts.dir, {
+    journeyTitle: result.journey.title,
     divergence: { ...result.divergence, journey: result.journey.id, runId: result.runId },
     report: md,
     runs: result.runs,
@@ -91,6 +94,8 @@ async function cmdRun(args) {
       ? resolve(dirname(journeyPath), '..', 'policies', 'both-ends.yaml')
       : null,
   });
+  result.artifacts.htmlPath = written.htmlPath;
+  result.artifacts.sealPath = written.sealPath;
 
   if (args.json) {
     process.stdout.write(
@@ -196,8 +201,16 @@ function probe(cmd) {
 }
 
 async function cmdLint(args) {
-  const policy = args._[0];
-  if (!policy) throw new Error('usage: both-ends lint <policy.yaml>');
+  const target = args._[0];
+  if (!target) throw new Error('usage: both-ends lint <journey.md|policy.yaml>');
+  if (/\.md$/i.test(target)) {
+    const journey = loadJourney(target);
+    const report = lintJourney(journey, { checkPaths: true });
+    process.stdout.write(renderJourneyLint(report, target));
+    if (args.json) process.stdout.write(JSON.stringify(report, null, 2) + '\n');
+    return report.ok ? 0 : 1;
+  }
+  const policy = target;
   const r = await lintPolicy(policy, process.cwd());
   process.stdout.write(`${r.output}\n`);
   return r.ok ? 0 : 1;
