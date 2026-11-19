@@ -90,7 +90,13 @@ export async function runBothEnds(opts) {
 }
 
 function resolveFake(fakeDir, surface) {
-  if (fakeDir && existsSync(join(fakeDir, `${surface}.ndjson`))) return { dir: fakeDir };
+  if (!fakeDir) return null;
+  const has = (dir) => existsSync(join(dir, `${surface}.ndjson`));
+  // Accept the short name too: --fake loop-1 finds fixtures/demo/loop-1.
+  const candidates = [fakeDir, join('fixtures', 'demo', fakeDir)];
+  for (const dir of candidates) {
+    if (has(dir)) return { dir };
+  }
   return { dir: fakeDir };
 }
 
