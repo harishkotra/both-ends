@@ -86,7 +86,7 @@ async function cmdRun(args) {
   const md = renderMarkdown(result);
   const written = writeArtifacts(result.artifacts.dir, {
     journeyTitle: result.journey.title,
-    divergence: { ...result.divergence, journey: result.journey.id, runId: result.runId },
+    divergence: { ...result.divergence, journey: result.journey.id, runId: result.runId, extras: result.extras },
     report: md,
     runs: result.runs,
     merged: result.merged,

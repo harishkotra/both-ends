@@ -25,7 +25,7 @@ function label(div) {
 }
 
 export function renderHtml(result) {
-  const { rows = [], summary = {}, runs = {}, journey = {}, pack = null, artifacts = null, loopHistory = [] } = result;
+  const { rows = [], summary = {}, runs = {}, journey = {}, pack = null, artifacts = null, loopHistory = [], extras = {} } = result;
   const clean = !summary.split && !summary.agreedFail && !summary.unproven && !summary.error;
 
   const rowHtml = rows
@@ -133,6 +133,13 @@ ${rowHtml}
   </table>
   <p class="sub">Compared through the journey, not by index: a browser and a simulator
      do not perform the same number of steps.</p>
+  ${Object.entries(extras)
+    .filter(([, list]) => list?.length)
+    .map(
+      ([surface, list]) => `<p class="sub muted">dropped on ${esc(surface)} (no journey step):
+        ${list.map((e) => esc(e.text)).join(' · ')}</p>`,
+    )
+    .join('\n')}
   ${findingHtml}
   ${loopHtml}
   <footer>

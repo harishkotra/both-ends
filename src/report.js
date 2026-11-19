@@ -72,6 +72,11 @@ export function renderTerminal(result) {
   if (summary.error) tail.push(red(`${summary.error} error`));
   out.push(`${convergedBadge(summary)} ${line}${tail.length ? '  ·  ' + tail.join('  ·  ') : ''}`);
 
+  const extraLines = Object.entries(result.extras || {})
+    .filter(([, list]) => list?.length)
+    .map(([surface, list]) => `${list.length} on ${surface}: ${list.map((e) => truncate(e.text, 40)).join(' · ')}`);
+  for (const line of extraLines) out.push(dim(`dropped   ${line}`));
+
   if (pack?.path) out.push(dim(`pack      ${pack.path}${pack.sha256 ? `  sha256:${pack.sha256.slice(0, 12)}` : ''}`));
   if (artifacts?.dir) out.push(dim(`artifacts ${artifacts.dir}`));
   out.push('');
@@ -119,6 +124,15 @@ export function renderMarkdown(result) {
   L.push('Steps are compared through the journey, not by index: a browser run and a');
   L.push('simulator run do not perform the same number of steps.');
   L.push('');
+  const extraList = Object.entries(result.extras || {}).filter(([, v]) => v?.length);
+  if (extraList.length) {
+    L.push('Observations with no journey step (dropped, not counted as divergence):');
+    L.push('');
+    for (const [surface, list] of extraList) {
+      for (const e of list) L.push(`- ${surface}: ${truncate(e.text, 120)} (\`${e.status || 'seen'}\`)`);
+    }
+    L.push('');
+  }
 
   const findings = result.rows.filter((r) => r.divergence !== DIVERGENCE.AGREED_PASS);
   if (findings.length) {

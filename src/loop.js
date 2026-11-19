@@ -79,7 +79,7 @@ export async function runLoop(opts) {
 
     const reportMd = renderMarkdown({ ...result, loopHistory: history });
     const written = writeArtifacts(result.artifacts.dir, {
-      divergence: { ...result.divergence, journey: result.journey.id, runId: result.runId, loopHistory: history },
+      divergence: { ...result.divergence, journey: result.journey.id, runId: result.runId, loopHistory: history, extras: result.extras },
       report: reportMd,
       runs: result.runs,
       merged: result.merged,
