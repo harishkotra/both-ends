@@ -157,4 +157,8 @@ demo/server       shared menu + orders API
 fixtures/         recorded NDJSON so tests and demos are deterministic
 ```
 
+`./scripts/stage.sh` brings the console, the simulator app and Appium up and tells
+you what's missing. `docs/demo-script.md` is the 3:40 shot list, `docs/posts.md`
+the two launch posts, `docs/SUBMISSION.md` the gate checklist.
+
 Built for the TestMu AI × Kane CLI hackathon, November 2026.
